@@ -13,9 +13,13 @@ public class CameraRotator : MonoBehaviour
 
     void Update()
     {
+        // 마우스 커서 비가시, 고정 모드
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         // 전 프레임에서 현 프레임까지의 수평/수직 회전량(각도)
-        var horizontalRotation = Input.GetAxis("Horizontal") * angularVelocity * Time.deltaTime;
-        var verticalRotation = -Input.GetAxis("Vertical") * angularVelocity * Time.deltaTime;
+        var horizontalRotation = Input.GetAxis("Mouse X") * angularVelocity * Time.deltaTime;
+        var verticalRotation = -Input.GetAxis("Mouse Y") * angularVelocity * Time.deltaTime;
 
         horizontalAngle += horizontalRotation;
         verticalAngle += verticalRotation;

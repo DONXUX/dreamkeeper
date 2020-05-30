@@ -8,13 +8,20 @@ public class Shooter : MonoBehaviour
     [SerializeField] Transform gunBarrelEnd;
     [SerializeField] ParticleSystem gunParticle;
     [SerializeField] AudioSource gunAudioSource;
+    float timer = 0.0f;
+    int waitingTime = 2;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
+            timer += Time.deltaTime;
             Shoot();
+            if (timer > waitingTime)
+            {
+                timer = 0;
+            }
         }
     }
 
