@@ -1,16 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Shooter : MonoBehaviour
 {
-    [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform gunBarrelEnd;
     [SerializeField] ParticleSystem gunParticle;
     [SerializeField] AudioSource gunAudioSource;
+    [SerializeField] float maxDistance;
+    private Crosshair theCrosshair;
+
     float timer = 0.0f;
     int waitingTime = 2;
 
+    RaycastHit hit;
+
+    private void Start()
+    {
+        theCrosshair = FindObjectOfType<Crosshair>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -27,8 +36,17 @@ public class Shooter : MonoBehaviour
 
     void Shoot()
     {
-        // 총알 복제 : 복제 대상, 초기위치, 초기방향
-        Instantiate(bulletPrefab, gunBarrelEnd.position, gunBarrelEnd.rotation);
+        theCrosshair.FireAnimation();
+        Debug.DrawRay(transform.position, transform.forward * maxDistance, Color.blue, 0.3f);
+
+        // 레이 캐스트
+        if(Physics.Raycast(transform.position, transform.forward, out hit, maxDistance))
+        {
+            if(hit.collider.tag == "Enemy")
+            {
+                hit.collider.gameObject.SendMessage("OnHitBullet");
+            } 
+        }
         // 파티클 
         gunParticle.Play();
         // 총 효과음 재생
