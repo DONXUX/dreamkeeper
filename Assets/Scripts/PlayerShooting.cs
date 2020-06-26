@@ -46,7 +46,7 @@ public class PlayerShooting : MonoBehaviour
 		{
 			timer = 0f;
 			theCrosshair.FireAnimation();
-			Debug.DrawRay(transform.position, transform.forward * maxRange, Color.blue, 0.3f);
+			Debug.DrawRay(transform.position, transform.forward * maxRange, Color.red, 0.3f);
 
 			gunLight.enabled = true;
 
@@ -62,7 +62,7 @@ public class PlayerShooting : MonoBehaviour
 				Collider collider = shootHit.collider;
 				if (collider.tag == "Enemy")
 				{
-					shootHit.collider.gameObject.SendMessage("OnHitBullet");
+					collider.gameObject.SendMessage("OnHitBullet");
 					Instantiate(hitParticle, shootHit.point, Quaternion.identity);
 				}
 				gunLine.SetPosition(1, shootHit.point);

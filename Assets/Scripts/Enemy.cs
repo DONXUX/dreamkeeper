@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public float attackPower;
     public float sinkSpeed = 2.5f;
+    public int scoreValue = 10;
 
     private int health;
     NavMeshAgent nav;
@@ -84,6 +85,7 @@ public class Enemy : MonoBehaviour
     {
         GetComponent<NavMeshAgent>().enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
+        ScoreManager.score += scoreValue;
         isSinking = true;
         Destroy(gameObject, 2f);
     }

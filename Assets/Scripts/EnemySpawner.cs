@@ -9,11 +9,16 @@ public class EnemySpawner : MonoBehaviour
     Enemy enemy; // 현재 Spawner가 보유한 목표물
 
     public void Spawn()
-    {
-        if(enemy == null)
-        {
-            // enemy 오브젝트를 가지고 있지않으면 스폰
-            enemy = Instantiate(enemyPrefab, transform.position, transform.rotation);
-        }
+    { 
+        enemy = Instantiate(enemyPrefab, transform.position, transform.rotation);
     }
+
+    //public void Spawn()
+    //{
+    //    if (enemy == null)
+    //    {
+    //        // enemy 오브젝트를 가지고 있지않으면 스폰
+    //        enemy = Instantiate(enemyPrefab, transform.position, transform.rotation);
+    //    }
+    //}
 }

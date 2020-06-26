@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,10 +9,17 @@ public class PlayerController : MonoBehaviour
 	public float gravity = -9.8f;
 	public float jumpForce = 3.0f;
 	public int maxJumpCount = 2;
+	public float maxStamina = 100.0f;
+	public float staminaConsumption = 0.25f;
+	public float staminaRecovery = 0.1f;
+	public Slider staminaBar;
 
 	[Header("Rotation")]
 	// 회전속도
 	public float angularVelocity = 30f;
+
+	[Header("Animator")]
+	public Animator animator;
 
 	// 수평 및 수직 방향의 회전량(각도)의 매 프레임 누적 값
 	float horizontalAngle = 0f;
@@ -30,15 +38,19 @@ public class PlayerController : MonoBehaviour
 	private bool isRun = false;
 	private bool isCrouch = false;
 	private bool isGround = true;
+	private bool rest = false;
 
 	// 움직임 체크 변수
 	private Vector3 lastPos;
 
+	private float stamina;
 	CharacterController cc;
+
 	void Start()
 	{
 		cc = gameObject.GetComponent<CharacterController>();
 		theCrosshair = FindObjectOfType<Crosshair>();
+		stamina = maxStamina;
 	}
 
 	void Update()
@@ -50,6 +62,7 @@ public class PlayerController : MonoBehaviour
 		Rotate();
 		MoveCheck();
 		Move();
+		staminaBar.value = stamina / 100.0f;
 	}
 
 	private void Init()
@@ -88,17 +101,18 @@ public class PlayerController : MonoBehaviour
 	private void Run()
 	{
 		/// 대쉬
-		if (Input.GetKeyDown(KeyCode.LeftShift))
+		if (Input.GetKey(KeyCode.LeftShift) && !rest && !isRun)
 		{
 			speed *= 2;
 			isRun = true;
 		}
-		if (Input.GetKeyUp(KeyCode.LeftShift))
-		{
+        else if((!Input.GetKey(KeyCode.LeftShift) || rest) && isRun)
+        {
 			speed /= 2;
 			isRun = false;
 		}
 		theCrosshair.RuningAnimation(isRun);
+
 	}
 
 	private void Move()
@@ -120,12 +134,22 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!isRun)
 		{
+			if(stamina <= maxStamina) stamina += staminaRecovery;
+			if (stamina >= 30.0f) rest = false;
 			if (Vector3.Distance(lastPos, transform.position) >= 0.01f)
 				isWalk = true;
 			else
 				isWalk = false;
 			theCrosshair.WalkingAnimation(isWalk);
+			animator.SetBool("IsWalking", isWalk);
 			lastPos = transform.position;
+		}
+        else
+        {
+			if (Vector3.Distance(lastPos, transform.position) >= 0.01f && stamina >= 0.0f)
+				stamina -= staminaConsumption;
+
+			if (stamina <= 0.0f) rest = true;
 		}
 	}
 
