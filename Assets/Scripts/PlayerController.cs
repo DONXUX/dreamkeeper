@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
 		MoveCheck();
 		Move();
 		staminaBar.value = stamina / 100.0f;
+
 	}
 
 	private void Init()
